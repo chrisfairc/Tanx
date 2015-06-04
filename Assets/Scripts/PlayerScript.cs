@@ -14,6 +14,9 @@ public class PlayerScript : MonoBehaviour
 	public Transform aim;
 	public Transform barrel;
 
+	private float leftTrackSpeed = 0f;
+	private float rightTrackSpeed = 0f;
+
 	public bool remote = false;
 
 	void Start () 
@@ -27,12 +30,34 @@ public class PlayerScript : MonoBehaviour
 
 	public void LeftTrackDrag(BaseEventData data)
 	{
-		TurnRight();
+		PointerEventData pointerData = data as PointerEventData;
+		float fDist = pointerData.position.y - pointerData.pressPosition.y;
+		leftTrackSpeed = fDist/Screen.height;
+
+	}
+	
+	public void LeftTrackDragUp(BaseEventData data)
+	{
+		leftTrackSpeed = 0;
 	}
 
 	public void RightTrackDrag(BaseEventData data)
 	{
-		TurnLeft();
+		PointerEventData pointerData = data as PointerEventData;
+		float fDist = pointerData.position.y - pointerData.pressPosition.y;
+		rightTrackSpeed = fDist/Screen.height;
+
+	}
+	
+	public void RightTrackDragUp(BaseEventData data)
+	{
+		rightTrackSpeed = 0;
+	}
+
+	public void AimDrag(BaseEventData data)
+	{
+		PointerEventData pointerData = data as PointerEventData;
+		aim.Rotate( -pointerData.delta.y * 100 / Screen.width, 0f, -pointerData.delta.x * 100 / Screen.height);
 
 	}
 
@@ -42,56 +67,14 @@ public class PlayerScript : MonoBehaviour
 
 		ellapsedTime += Time.deltaTime;
 
-		if(Input.GetAxis ("Horizontal1") < -.001f )//|| Input.mousePosition)
-		{
-			TurnLeft();
-		}
-
-		if(Input.GetAxis ("Horizontal1") > .001f)
-		{
-			TurnRight();
-		}
-
-		if(Input.GetAxis ("Vertical1") < -.001f)
-		{
-			Reverse ();
-		}
-
-		if(Input.GetAxis ("Vertical1") > .001f)
-		{
-			Accelerate ();
-		}
-
-		if(Input.GetAxis ("Vertical2") < -.001f)
-		{
-			LowerAim ();
-		}
-		
-		if(Input.GetAxis ("Vertical2") > .001f)
-		{
-			RaiseAim ();
-		}
-
-		if(Input.GetAxis ("Horizontal2") < -.001f)
-		{
-			AimLeft();
-		}
-		
-		if(Input.GetAxis ("Horizontal2") > .001f)
-		{
-			AimRight();
-		}
-
-		if(Input.GetButtonDown ("Fire") )
-		{
-			Fire ();
-		}
-		
 		if(Input.GetButtonDown ("Jump"))
 		{
 			Reground ();
 		}
-		
+
+		veloc = rightTrackSpeed + leftTrackSpeed;
+		angular = leftTrackSpeed - rightTrackSpeed ;
+
 		transform.Translate(0f, 0f, veloc);
 		transform.Rotate (0f, angle, 0f);
 		angle += angular;
@@ -106,64 +89,12 @@ public class PlayerScript : MonoBehaviour
 			Explode();
 		} 
 	}
-	
+
+
 	void FixedUpdate()
 	{
 
 
-	}
-	
-	public void TurnLeft()
-	{
-		if(isgrounded)
-			angular -= 0.1f;
-
-	}
-	
-	public void TurnRight()
-	{
-		if(isgrounded)
-			angular += 0.1f;
-
-	}
-	
-	public void Reverse()
-	{
-		if(isgrounded)
-			veloc -= 0.01f;
-
-	}
-	
-	public void Accelerate()
-	{
-		if(isgrounded)
-			veloc += 0.02f;
-	}
-
-	public void RaiseAim()
-	{
-		if(isgrounded)
-			aim.Rotate(-1f,0f,0f);
-		
-	}
-	
-	public void LowerAim()
-	{
-		if(isgrounded)
-			aim.Rotate(1f,0f,0f);
-	}
-
-	public void AimLeft()
-	{
-		if(isgrounded)
-			aim.Rotate(0f,0f,1f);
-		
-	}
-	
-	public void AimRight()
-	{
-		if(isgrounded)
-			aim.Rotate(0f,0f,-1f);
 	}
 
 	public void Fire()
