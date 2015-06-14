@@ -7,6 +7,7 @@ public class CameraFollow : MonoBehaviour
 	public float camDistance;
 	public float camHeight;
 	public float targetHeight;
+
 	public float smoothing = 5f;
 	
 	

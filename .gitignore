@@ -16,3 +16,8 @@
 *.vshost.exe*
 *.iml
 *Thumbs.db*
+
+Library
+Temp
+
+

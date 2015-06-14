@@ -25,17 +25,8 @@ public class Bullet : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		if(collision.gameObject.name.StartsWith("TanxTerrain"))
 		{
-			Terrain oTerrain = collision.gameObject.GetComponent<Terrain>();
-			float normx =  (transform.position.x - oTerrain.transform.position.x) / oTerrain.terrainData.size.x;
-			float normz =  (transform.position.z - oTerrain.transform.position.z) / oTerrain.terrainData.size.z;
-
-			int iBlowX = (int)(normx * oTerrain.terrainData.heightmapWidth);
-			int iBlowZ = (int)(normz * oTerrain.terrainData.heightmapHeight);
-
-			float[,] heightBlow = oTerrain.terrainData.GetHeights(iBlowX, iBlowZ, 1, 1);
-			heightBlow[0,0] -= 1f;
-				
-			oTerrain.terrainData.SetHeights(iBlowX, iBlowZ, heightBlow);
+			TanxTerrain oTerrain = collision.gameObject.GetComponent<TanxTerrain>();
+			StartCoroutine(oTerrain.DentTerrain(transform.position, 0.03f));
 		}
 
 		Explode();
