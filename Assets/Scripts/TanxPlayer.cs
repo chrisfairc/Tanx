@@ -190,14 +190,25 @@ public class TanxPlayer : MonoBehaviour
 
 		return builder.ToString();
 	}
-
-	public bool DeSerializeInfo(string sInfo)
-	{
-		return false;
+	
+	public Vector3 getVector3(string rString){
+	    string[] temp = rString.Substring(1,rString.Length-2).Split(',');
+	    float x = float.Parse(temp[0]);
+	    float y = float.Parse(temp[1]);
+	    float z = float.Parse(temp[2]);
+	    Vector3 rValue = new Vector3(x,y,z);
+	    return rValue;
 	}
 
 	public void ApplyUpdates (string str)
 	{
+	    string[] temp = str.Split('|');
+	    gameObject.transform.position = getVector3(temp[0]);
+	    gameObject.transform.rotation = Quaternion.parse(temp[1]);
+	    veloc = float.parse(temp[2]);
+	    angle = float.parse(temp[3]);
+	    angular = float.parse(temp[4]);
+	    aim.rotation = Quaternion.parse(temp[5]);
 
 	}
 }
